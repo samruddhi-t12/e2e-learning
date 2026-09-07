@@ -11,6 +11,9 @@ import ContactPage from './pages/ContactPage';
 import CreatorDashboard from './pages/CreatorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
+import Terms from './pages/Terms';
+import Privacy from './pages/privacy';
+import Refund from './pages/Refund';
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/creator-dashboard" element={<CreatorDashboard />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/refund" element={<Refund />} />
             </Routes>
           </main>
           <Footer />
