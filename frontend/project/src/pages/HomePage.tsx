@@ -66,13 +66,13 @@ const ContactSection = () => (
 
 const HomePage = () => {
   return (
-    <div>
+    <div style={{ background: '#f8faff' }}>
       <Hero />
       <Features />
       <ContactSection />
 
       <style>{`
-        .contact-section { padding: 48px 24px; background: #f9f9f7; }
+        .contact-section { padding: 48px 24px; background: #f8faff; }
         .contact-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
         .contact-divider { width: 1px; background: #e0ddd8; align-self: stretch; margin-top: 8px; }
         .faq-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #b07d4f; margin-bottom: 12px; }
