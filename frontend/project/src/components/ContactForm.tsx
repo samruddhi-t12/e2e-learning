@@ -25,15 +25,22 @@ const ContactForm = () => {
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
-    console.log('Form submitted:', formData);
-    setIsSubmitted(true);
+    
+    try {
+      // Import api at the top if it's not already
+      const api = (await import('../api')).default;
+      await api.post('/contact/', formData);
+      setIsSubmitted(true);
+    } catch (error) {
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   const handleReset = () => {

@@ -22,3 +22,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+from .models import ContactQuery
+
+class ContactQuerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactQuery
+        fields = '__all__'

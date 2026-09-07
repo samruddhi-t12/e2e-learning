@@ -1,43 +1,79 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import api from '../api';
 
 interface User {
-  id: string;
-  name: string;
+  id?: string;
+  full_name: string;
   email: string;
+  is_staff?: boolean;
+  is_superuser?: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  signup: (name: string, email: string, password: string) => void;
+  signup: (name: string, email: string, password: string) => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (email: string, password: string) => {
-    const mockUser = {
-      id: '1',
-      name: 'John Doe',
-      email: email,
-    };
-    setUser(mockUser);
+  const fetchUser = async () => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      try {
+        const response = await api.get('/me/');
+        setUser(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user", error);
+        logout();
+      }
+    }
+    setLoading(false);
   };
 
-  const signup = (name: string, email: string, password: string) => {
-    const mockUser = {
-      id: '1',
-      name: name,
-      email: email,
-    };
-    setUser(mockUser);
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    try {
+      // Django simplejwt defaults to expecting the USERNAME_FIELD, which is 'email'
+      const response = await api.post('/token/', { email, password });
+      const { access, refresh } = response.data;
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      await fetchUser();
+    } catch (error) {
+      console.error("Login failed", error);
+      throw error;
+    }
+  };
+
+  const signup = async (full_name: string, email: string, password: string) => {
+    try {
+      const response = await api.post('/register/', { full_name, email, password });
+      const { access, refresh } = response.data;
+      if (access && refresh) {
+        localStorage.setItem('access_token', access);
+        localStorage.setItem('refresh_token', refresh);
+        await fetchUser();
+      }
+    } catch (error) {
+      console.error("Signup failed", error);
+      throw error;
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     setUser(null);
   };
 
@@ -49,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login,
         logout,
         signup,
+        loading,
       }}
     >
       {children}

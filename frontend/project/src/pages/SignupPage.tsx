@@ -10,10 +10,25 @@ const SignupPage = () => {
   const { signup } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    signup(name, email, password);
-    navigate('/');
+    setError(null);
+    setLoading(true);
+    try {
+      await signup(name, email, password);
+      navigate('/');
+    } catch (err: any) {
+      if (err.response?.data) {
+        setError(JSON.stringify(err.response.data));
+      } else {
+        setError('Signup failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,11 +99,18 @@ const SignupPage = () => {
             />
           </div>
 
+          {error && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm mb-4 break-words">
+              {error}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
           >
-            Sign Up
+            {loading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
 

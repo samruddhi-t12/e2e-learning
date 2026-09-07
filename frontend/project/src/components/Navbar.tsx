@@ -106,10 +106,16 @@ const Navbar = () => {
                   {isAuthenticated ? (
                     <>
                       <div className="dropdown-header">
-                        <div className="dropdown-name">{user?.name}</div>
+                        <div className="dropdown-name">{user?.full_name}</div>
                         <div className="dropdown-email">{user?.email}</div>
                       </div>
                       <Link to="/orders" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}><Package size={14} /> My Orders</Link>
+                      {user?.is_staff && (
+                        <Link to="/creator-dashboard" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}><BookOpen size={14} /> Creator Dashboard</Link>
+                      )}
+                      {user?.is_superuser && (
+                        <Link to="/admin-dashboard" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}><BookOpen size={14} /> Admin Dashboard</Link>
+                      )}
                       <div className="dropdown-divider" />
                       <button onClick={handleLogout} className="dropdown-item danger"><LogOut size={14} /> Sign Out</button>
                     </>

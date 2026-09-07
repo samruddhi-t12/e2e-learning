@@ -1,12 +1,30 @@
+import { useState, useEffect } from 'react';
 import SubjectCard from '../components/SubjectCard';
-import { subjects } from '../data/subjects';
 import { motion } from 'framer-motion';
+import api from '../api';
+import { NoteListResponse } from '../types';
 
 const NotesPage = () => {
+  const [notes, setNotes] = useState<NoteListResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await api.get('/notes/');
+        setNotes(response.data);
+      } catch (error) {
+        console.error('Failed to fetch notes', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNotes();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -21,20 +39,23 @@ const NotesPage = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {subjects.map((subject, i) => (
-            <motion.div
-              key={subject.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <SubjectCard subject={subject} />
-            </motion.div>
-          ))}
-        </div>
-
+        {loading ? (
+          <div className="text-center py-20 text-gray-500">Loading notes...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {notes.map((note, i) => (
+              <motion.div
+                key={note.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <SubjectCard subject={note} />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

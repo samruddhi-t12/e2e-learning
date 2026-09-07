@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, ArrowRight, Star } from 'lucide-react';
-import { Subject } from '../data/subjects';
+import { BookOpen, ArrowRight, Star, StarHalf } from 'lucide-react';
+import { NoteListResponse } from '../types';
 
 interface SubjectCardProps {
-  subject: Subject;
+  subject: NoteListResponse;
 }
 
 // Rotate through accent colors for variety
@@ -19,6 +19,17 @@ const accents = [
 const SubjectCard = ({ subject }: SubjectCardProps) => {
   const navigate = useNavigate();
   const accent = accents[subject.id % accents.length];
+
+  const rating = subject.average_rating || 0;
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+
+  // Calculate discount
+  const originalPrice = subject.price;
+  const currentPrice = subject.discounted_price || subject.price;
+  const discountPercentage = originalPrice > currentPrice 
+    ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100) 
+    : 0;
 
   return (
     <>
@@ -241,10 +252,13 @@ const SubjectCard = ({ subject }: SubjectCardProps) => {
           </div>
           <div className="scard-title">{subject.title}</div>
           <div className="scard-stars">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(fullStars)].map((_, i) => (
               <Star key={i} size={11} fill="#fbbf24" strokeWidth={0} />
             ))}
-            <span className="scard-rating">4.9 · 120+ students</span>
+            {hasHalfStar && <StarHalf size={11} fill="#fbbf24" strokeWidth={0} />}
+            <span className="scard-rating">
+              {rating > 0 ? rating.toFixed(1) : 'New'} · {subject.total_reviews} reviews
+            </span>
           </div>
         </div>
 
@@ -253,8 +267,7 @@ const SubjectCard = ({ subject }: SubjectCardProps) => {
           <p className="scard-desc">{subject.description}</p>
 
           <div className="scard-tags">
-            <span className="scard-tag">All PYQs</span>
-            <span className="scard-tag">9+ SGPA</span>
+            {subject.author && <span className="scard-tag">By {subject.author.full_name}</span>}
             <span className="scard-tag">Instant PDF</span>
           </div>
 
@@ -262,11 +275,19 @@ const SubjectCard = ({ subject }: SubjectCardProps) => {
 
           <div className="scard-price-row">
             <div>
-              <div className="scard-price-label">Limited Time Offer</div>
+              {discountPercentage > 0 && <div className="scard-price-label">Limited Time Offer</div>}
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-                <span style={{ fontSize: '1rem', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 500 }}>₹99</span>
-                <span className="scard-price">₹49</span>
-                <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '100px', background: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca' }}>50% OFF</span>
+                {discountPercentage > 0 && (
+                  <span style={{ fontSize: '1rem', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 500 }}>
+                    ₹{originalPrice}
+                  </span>
+                )}
+                <span className="scard-price">₹{currentPrice}</span>
+                {discountPercentage > 0 && (
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '100px', background: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca' }}>
+                    {discountPercentage}% OFF
+                  </span>
+                )}
               </div>
             </div>
             <span className="scard-badge">✓ Instant Access</span>

@@ -12,10 +12,21 @@ const LoginPage = () => {
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || '/';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
-    navigate(from, { replace: true });
+    setError(null);
+    setLoading(true);
+    try {
+      await login(email, password);
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError('Invalid email or password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,13 +75,19 @@ const LoginPage = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               placeholder="Enter your password" />
           </div>
+          {error && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm mb-4">
+              {error}
+            </div>
+          )}
           <motion.button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </motion.button>
         </motion.form>
 

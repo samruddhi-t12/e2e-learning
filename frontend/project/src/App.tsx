@@ -8,6 +8,8 @@ import OrdersPage from './pages/OrdersPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ContactPage from './pages/ContactPage';
+import CreatorDashboard from './pages/CreatorDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/creator-dashboard" element={<CreatorDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />
