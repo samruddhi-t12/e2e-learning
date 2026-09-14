@@ -94,7 +94,8 @@ const SignupPage = () => {
         </motion.div>
 
         {/* Form fields */}
-        <motion.div
+        <motion.form
+          onSubmit={handleSubmit}
           className="space-y-6"
           variants={containerVariants}
           initial="hidden"
@@ -158,24 +159,25 @@ const SignupPage = () => {
             />
           </motion.div>
 
-{error && (
-  <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm mb-4 break-words">
-    {error}
-  </div>
-)}
+          {error && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm mb-4 break-words">
+              {error}
+            </div>
+          )}
 
-{/* Submit Button */}
-<motion.div variants={itemVariants}>
-  <motion.button
-    type="submit"
-    disabled={loading}
-    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-200 disabled:opacity-50"
-    whileHover={{ scale: 1.02, boxShadow: '0 0px 25px rgba(37,99,235,0.35)' }}
-    whileTap={{ scale: 0.98 }}
-  >
-    {loading ? 'Creating account...' : 'Sign Up'}
-  </motion.button>
-</motion.div>
+          {/* Submit Button */}
+          <motion.div variants={itemVariants}>
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-200 disabled:opacity-50"
+              whileHover={{ scale: 1.02, boxShadow: '0 0px 25px rgba(37,99,235,0.35)' }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {loading ? 'Creating account...' : 'Sign Up'}
+            </motion.button>
+          </motion.div>
+        </motion.form>
 
         {/* Footer link */}
         <motion.p
