@@ -216,9 +216,9 @@ const SubjectPreviewPage = () => {
               </div>
               <div className="w-full h-[600px] bg-gray-200 flex items-center justify-center relative">
                 {note.is_unlocked && note.main_pdf ? (
-                  <iframe src={note.main_pdf.startsWith('http') ? note.main_pdf : `http://localhost:8000${note.main_pdf}`} className="w-full h-full border-0" title="Full Notes" />
+                  <iframe src={note.main_pdf.startsWith('http') ? note.main_pdf : `https://e2e-learning.onrender.com${note.main_pdf}`} className="w-full h-full border-0" title="Full Notes" />
                 ) : note.preview_pdf ? (
-                  <iframe src={note.preview_pdf.startsWith('http') ? note.preview_pdf : `http://localhost:8000${note.preview_pdf}`} className="w-full h-full border-0" title="Preview Notes" />
+                  <iframe src={note.preview_pdf.startsWith('http') ? note.preview_pdf : `https://e2e-learning.onrender.com${note.preview_pdf}`} className="w-full h-full border-0" title="Preview Notes" />
                 ) : (
                   <p className="font-sans text-gray-500">Preview not available yet.</p>
                 )}
