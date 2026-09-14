@@ -45,6 +45,8 @@ A full-stack, enterprise-grade e-learning and digital notes marketplace. This pl
 
 ## 🚀 Live Demo & Deployment
 
+**🌍 Live Website:** [https://e2e-learning.vercel.app](https://e2e-learning.vercel.app)
+
 - **Frontend Hosting:** Vercel
 - **Backend Hosting:** Render
 - **Database:** NeonDB (PostgreSQL)
@@ -61,8 +63,8 @@ A full-stack, enterprise-grade e-learning and digital notes marketplace. This pl
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/E2E-Learning.git
-cd E2E-Learning
+git clone https://github.com/samruddhi-t12/e2e-learning.git
+cd e2e-learning
 ```
 
 ### 2. Backend Setup
